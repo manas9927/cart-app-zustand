@@ -1,6 +1,6 @@
-import { product } from "@/definitions/Product";
+import { Product } from "@/definitions/Product";
 
-export const products: product[] = [
+export const products: Product[] = [
   {
     id: "1",
     name: "iPhone 9",

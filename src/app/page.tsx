@@ -1,91 +1,63 @@
 "use client";
+import ProductCard from "@/components/ui/ProductCard";
 import { products } from "../data/products";
+import CartSection from "@/components/ui/CartSection";
+import { useState } from "react";
+import CartIcon from "@/assets/svgs/CartIcon";
+import { Product } from "@/definitions/Product";
+import useCartStore from "@/store/store";
 
 export default function Home() {
+  const [isCartOpen, setIsCartOpen] = useState(false);
+  const { addItem, items } = useCartStore();
+
+  const handleOpenCart = () => {
+    setIsCartOpen(true);
+  };
+  const handleCloseCart = () => {
+    setIsCartOpen(false);
+  };
+
+  const handleAddToCart = (productToAdd: Product) => {
+    addItem(productToAdd);
+    setIsCartOpen(true);
+  };
+
   return (
     <main className="flex min-h-screen flex-col items-center justify-between md:px-24 px-10 py-16">
       <h1 className="text-center text-black text-3xl font-bold tracking-wider">
         Browse products
       </h1>
+      <div className="fixed right-0 top-0 mx-10 my-16">
+        {/* <CartIcon onClick={handleOpenCart} /> */}
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          fill="none"
+          viewBox="0 0 24 24"
+          strokeWidth={1.5}
+          stroke="currentColor"
+          className="w-6 h-6 cursor-pointer stroke-gray-800 hover:stroke-gray-900"
+          onClick={handleOpenCart}
+        >
+          <path
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            d="M2.25 3h1.386c.51 0 .955.343 1.087.835l.383 1.437M7.5 14.25a3 3 0 00-3 3h15.75m-12.75-3h11.218c1.121-2.3 2.1-4.684 2.924-7.138a60.114 60.114 0 00-16.536-1.84M7.5 14.25L5.106 5.272M6 20.25a.75.75 0 11-1.5 0 .75.75 0 011.5 0zm12.75 0a.75.75 0 11-1.5 0 .75.75 0 011.5 0z"
+          />
+        </svg>
+      </div>
       <div className="grid md:grid-cols-3 grid-cols-1 md:gap-16 gap-5 my-20">
         {products.map((product) => (
-          <div
-            className="md:max-w-sm max-w-lg rounded-lg overflow-hidden shadow-md hover:shadow-lg cursor-pointer"
+          <ProductCard
+            data={product}
             key={product.id}
-          >
-            <img
-              className="w-full h-48 object-cover"
-              src={product.thumbnail}
-              alt="Product Thumbnail"
-            />
-            <div className="px-6 py-4">
-              <div className="font-bold text-xl mb-2">{product.name}</div>
-              <p className="text-gray-700 text-base line-clamp-2">
-                {product.description}
-              </p>
-              <div className="flex flex-row items-center justify-between py-4">
-                <p className="text-gray-900 text-xl mt-2">
-                  ₹ {Intl.NumberFormat().format(product.price)}
-                </p>
-                <button className="bg-gray-900 hover:shadow-lg text-white font-bold py-2 px-4 rounded-lg">
-                  Add to Cart
-                </button>
-              </div>
-            </div>
-          </div>
+            addToCart={() => {
+              handleAddToCart(product);
+            }}
+          />
         ))}
       </div>
-      <div className="fixed right-0 top-0 h-screen w-64 bg-white shadow-lg">
-        <div className="p-4">
-          <div className="flex flex-row items-center justify-between mb-4">
-            <h2 className="text-xl font-semibold">Cart</h2>
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              fill="none"
-              viewBox="0 0 24 24"
-              strokeWidth={1.5}
-              stroke="currentColor"
-              className="w-6 h-6"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                d="M9.75 9.75l4.5 4.5m0-4.5l-4.5 4.5M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
-              />
-            </svg>
-          </div>
-          <div className="flex flex-col space-y-4">
-            {products.map((product) => (
-              <div
-                className="flex items-center justify-between"
-                key={product.id}
-              >
-                <div className="flex items-center space-x-2">
-                  <img
-                    className="h-10 w-10"
-                    src={product.thumbnail}
-                    alt="Product 1"
-                  />
-                  <span className="font-semibold line-clamp-1">
-                    {product.name}
-                  </span>
-                </div>
-                <span className="font-semibold line-clamp-1">
-                  ₹ {Intl.NumberFormat().format(product.price)}
-                </span>
-              </div>
-            ))}
-          </div>
-          <div className="mt-8">
-            <p className="font-bold text-lg my-3">
-              Total: ₹ {Intl.NumberFormat().format(120000)}
-            </p>
-            <button className="bg-gray-900 hover:shadow-lg text-white font-bold py-2 px-4 rounded-lg w-full">
-              Checkout
-            </button>
-          </div>
-        </div>
-      </div>
+      {isCartOpen && <CartSection onClose={handleCloseCart} />}
     </main>
   );
 }
