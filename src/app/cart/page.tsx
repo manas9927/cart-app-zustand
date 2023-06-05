@@ -11,7 +11,7 @@ interface CartPageProps {}
 
 const CartPage: React.FC<CartPageProps> = () => {
   const router = useRouter();
-  const { items, removeItem } = useCartStore();
+  const { items, removeItem, totalPrice } = useCartStore();
 
   useEffect(() => {
     items.length < 1 && handleOpenHomePage();
@@ -86,7 +86,9 @@ const CartPage: React.FC<CartPageProps> = () => {
                 />
                 <h3 className="text-lg font-semibold">{product.name}</h3>
                 <p className="text-gray-700 mb-2">
-                  ₹ {Intl.NumberFormat().format(product.price)}
+                  <span className="font-bold text-base">
+                    ₹ {Intl.NumberFormat().format(product.price)}
+                  </span>
                 </p>
                 <button
                   className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded"
@@ -100,6 +102,9 @@ const CartPage: React.FC<CartPageProps> = () => {
             ))}
           </div>
           <div className="fixed bottom-40 right-72">
+            <p className="my-2 font-semibold">
+              Items total: ₹ {Intl.NumberFormat().format(totalPrice)}
+            </p>
             <button className="bg-gray-700 hover:bg-gray-800 text-white font-bold py-4 px-8 rounded-lg">
               Proceed to Checkout
             </button>
