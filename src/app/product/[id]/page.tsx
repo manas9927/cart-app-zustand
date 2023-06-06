@@ -8,15 +8,13 @@ import useCartStore from "@/store/store";
 
 interface ProductPageProps {}
 
-const ProductPage: React.FC<ProductPageProps> = () => {
+const ProductPage: React.FC<ProductPageProps> = ({ params }: any) => {
   const [isCartOpen, setIsCartOpen] = useState(false);
   const router = useRouter();
   const path = usePathname();
   const { addItem } = useCartStore();
 
-  const id: string = path.split("/")[2];
-
-  const productData = products.find((product) => product.id === id);
+  const productData = products.find((product) => product.id === params.id);
 
   const handleOpenCart = () => {
     setIsCartOpen(true);
